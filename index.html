@@ -1,66 +1,32 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Guaranda Go</title>
-    <link rel="stylesheet" href="estilos.css">
-    <link rel="manifest" href="manifest.json">
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+  <meta charset="UTF-8">
+  <title>Taxi Bolívar</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <h1>🚖 Taxi Bolívar</h1>
 
-    <div id="role-screen" class="screen active">
-        <div class="header-logo">
-            <h1>Guaranda<span>Go</span></h1>
-        </div>
-        <div class="login-container">
-            <input type="text" id="user-name" placeholder="Ingresa tu nombre">
-            <button onclick="iniciarApp('cliente')" class="btn-black">Viajar ahora</button>
-            <button onclick="iniciarApp('conductor')" class="btn-white">Soy Conductor</button>
-            <button onclick="iniciarApp('admin')" class="btn-text">Administrador</button>
-        </div>
-    </div>
+  <!-- Cliente -->
+  <section id="cliente">
+    <h2>Cliente</h2>
+    <input type="text" id="clienteNombre" placeholder="Introduce tu nombre">
+    <button onclick="solicitarTaxi()">Solicitar Taxi</button>
+  </section>
 
-    <div id="app-screen" class="screen hidden">
-        <div id="map-container">
-            <canvas id="mapCanvas"></canvas>
-            <button class="back-btn" onclick="location.reload()">✕</button>
+  <!-- Conductor -->
+  <section id="conductor">
+    <h2>Conductor</h2>
+    <input type="text" id="conductorNombre" placeholder="Nombre">
+    <input type="text" id="conductorApellido" placeholder="Apellido">
+    <button onclick="aceptarServicio()">Aceptar Servicio</button>
+  </section>
 
-            <div class="bottom-sheet">
-                <div id="ui-cliente" class="role-ui hidden">
-                    <h3>¿A dónde vamos?</h3>
-                    <div class="input-box">
-                        <div class="dot green"></div>
-                        <input type="text" value="Parque Central, Guaranda" readonly>
-                    </div>
-                    <div class="input-box">
-                        <div class="dot black"></div>
-                        <input type="text" id="input-destino" placeholder="Introduce tu destino">
-                    </div>
-                    <button class="btn-confirm" onclick="solicitarViaje()">Confirmar GuarandaGo</button>
-                </div>
+  <!-- Mapa -->
+  <div id="map" style="height:500px;"></div>
 
-                <div id="ui-conductor" class="role-ui hidden">
-                    <div class="status-bar">
-                        <span class="pulse-icon"></span> En línea (Esperando viajes)
-                    </div>
-                    <div id="alerta-viaje" class="alert-card hidden">
-                        <p><strong>NUEVO VIAJE</strong></p>
-                        <p id="info-pedido"></p>
-                        <button class="btn-accept" onclick="aceptarViaje()">ACEPTAR</button>
-                    </div>
-                </div>
-
-                <div id="trip-status" class="trip-card hidden">
-                    <div class="loader"></div>
-                    <p id="msg-status">Buscando el conductor más cercano...</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script src="script.js"></script>
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
