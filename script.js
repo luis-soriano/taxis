@@ -1,4 +1,4 @@
-console.log("Mapa de taxis en Guaranda cargando...");
+console.log("Mapa de taxis (carros) en Guaranda cargando...");
 
 // =======================
 // 1️⃣ CREAR MAPA EN GUARANDA
@@ -13,45 +13,38 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(mapa);
 
 // =======================
-// 3️⃣ ICONOS TIPO TAXI GRANDES
+// 3️⃣ ICONOS DE CARRO (TAXI)
 // =======================
-function crearIconoTaxi(color) {
-    return L.divIcon({
-        html: `<div style="
-            background:${color};
-            width:50px;
-            height:50px;
-            border-radius:50%;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            font-size:26px;
-            box-shadow:0 0 10px black;
-            border:2px solid white;
-        ">🚕</div>`,
-        className: ''
-    });
-}
+var carroLibre = L.icon({
+    iconUrl: 'https://cdn-icons-png.flaticon.com/512/744/744465.png', // carro verde
+    iconSize: [45, 45],
+    iconAnchor: [22, 40],
+    popupAnchor: [0, -35]
+});
 
-var taxiLibre = crearIconoTaxi("#00c853");   // verde brillante
-var taxiOcupado = crearIconoTaxi("#d50000"); // rojo fuerte
+var carroOcupado = L.icon({
+    iconUrl: 'https://cdn-icons-png.flaticon.com/512/744/744466.png', // carro rojo
+    iconSize: [45, 45],
+    iconAnchor: [22, 40],
+    popupAnchor: [0, -35]
+});
 
 // =======================
-// 4️⃣ AGREGAR TAXIS
+// 4️⃣ AGREGAR TAXIS (CARROS)
 // =======================
-L.marker([-1.5926, -79.0000], {icon: taxiLibre})
+L.marker([-1.5926, -79.0000], {icon: carroLibre})
   .addTo(mapa)
   .bindPopup("<b>Taxi Centro</b><br>🟢 Disponible");
 
-L.marker([-1.5965, -79.0040], {icon: taxiOcupado})
+L.marker([-1.5965, -79.0040], {icon: carroOcupado})
   .addTo(mapa)
   .bindPopup("<b>Taxi Terminal</b><br>🔴 Ocupado");
 
-L.marker([-1.5885, -78.9975], {icon: taxiLibre})
+L.marker([-1.5885, -78.9975], {icon: carroLibre})
   .addTo(mapa)
   .bindPopup("<b>Taxi Norte</b><br>🟢 Disponible");
 
-L.marker([-1.5945, -79.0080], {icon: taxiOcupado})
+L.marker([-1.5945, -79.0080], {icon: carroOcupado})
   .addTo(mapa)
   .bindPopup("<b>Taxi Sur</b><br>🔴 Ocupado");
 
