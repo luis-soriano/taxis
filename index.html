@@ -6,80 +6,61 @@
     <title>Guaranda Go</title>
     <link rel="stylesheet" href="estilos.css">
     <link rel="manifest" href="manifest.json">
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 </head>
 <body>
 
     <div id="role-screen" class="screen active">
-        <div class="welcome-header">
+        <div class="header-logo">
             <h1>Guaranda<span>Go</span></h1>
-            <p>Tu transporte seguro en la ciudad</p>
         </div>
-        
-        <div class="login-box">
-            <input type="text" id="user-name" placeholder="Tu nombre completo">
-            <div class="role-selector">
-                <button onclick="initApp('cliente')" class="btn-main">🚗 Pasajero</button>
-                <button onclick="initApp('conductor')" class="btn-outline">🚖 Conductor</button>
-            </div>
-            <button onclick="initApp('admin')" class="btn-admin">Acceso Administrador</button>
+        <div class="login-container">
+            <input type="text" id="user-name" placeholder="Ingresa tu nombre">
+            <button onclick="iniciarApp('cliente')" class="btn-black">Viajar ahora</button>
+            <button onclick="iniciarApp('conductor')" class="btn-white">Soy Conductor</button>
+            <button onclick="iniciarApp('admin')" class="btn-text">Administrador</button>
         </div>
     </div>
 
     <div id="app-screen" class="screen hidden">
         <div id="map-container">
             <canvas id="mapCanvas"></canvas>
-            
-            <button class="floating-back" onclick="location.reload()">✕</button>
+            <button class="back-btn" onclick="location.reload()">✕</button>
 
-            <div class="action-card">
-                <div id="ui-cliente" class="ui-section hidden">
-                    <div class="input-group">
-                        <div class="dot-start"></div>
-                        <input type="text" placeholder="Ubicación actual" value="Parque Central, Guaranda" readonly>
+            <div class="bottom-sheet">
+                <div id="ui-cliente" class="role-ui hidden">
+                    <h3>¿A dónde vamos?</h3>
+                    <div class="input-box">
+                        <div class="dot green"></div>
+                        <input type="text" value="Parque Central, Guaranda" readonly>
                     </div>
-                    <div class="input-group">
-                        <div class="dot-end"></div>
-                        <input type="text" id="dest-input" placeholder="¿A dónde vas?">
+                    <div class="input-box">
+                        <div class="dot black"></div>
+                        <input type="text" id="input-destino" placeholder="Introduce tu destino">
                     </div>
-                    <button id="btn-request" onclick="requestRide()">SOLICITAR GUARANDA GO</button>
+                    <button class="btn-confirm" onclick="solicitarViaje()">Confirmar GuarandaGo</button>
                 </div>
 
-                <div id="ui-conductor" class="ui-section hidden">
-                    <div class="driver-status">
-                        <span class="status-badge">En Línea</span>
-                        <p id="driver-info">Esperando solicitudes...</p>
+                <div id="ui-conductor" class="role-ui hidden">
+                    <div class="status-bar">
+                        <span class="pulse-icon"></span> En línea (Esperando viajes)
                     </div>
-                    <div id="ride-request" class="ride-alert hidden">
-                        <p><strong>Nuevo Viaje:</strong> <span id="req-name"></span></p>
-                        <p>📍 Destino: <span id="req-dest"></span></p>
-                        <button class="btn-accept" onclick="acceptRide()">ACEPTAR VIAJE</button>
+                    <div id="alerta-viaje" class="alert-card hidden">
+                        <p><strong>NUEVO VIAJE</strong></p>
+                        <p id="info-pedido"></p>
+                        <button class="btn-accept" onclick="aceptarViaje()">ACEPTAR</button>
                     </div>
                 </div>
 
-                <div id="ui-admin" class="ui-section hidden">
-                    <h3>Panel de Control</h3>
-                    <div id="admin-log"></div>
-                </div>
-
-                <div id="trip-status" class="hidden">
-                    <div class="trip-info">
-                        <img src="https://cdn-icons-png.flaticon.com/512/2344/2344093.png" width="40">
-                        <div>
-                            <p id="trip-msg">El conductor va en camino</p>
-                            <small id="trip-sub">Llegada en 3 min • Toyota Corolla</small>
-                        </div>
-                    </div>
+                <div id="trip-status" class="trip-card hidden">
+                    <div class="loader"></div>
+                    <p id="msg-status">Buscando el conductor más cercano...</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
-
-<script src="script.js"></script>
-    
     <script src="script.js"></script>
 </body>
 </html>
-
