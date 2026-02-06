@@ -1,10 +1,10 @@
 {
-  "name": "Mi App de Transporte",
-  "short_name": "Transporte",
+  "name": "Taxi Guaranda App",
+  "short_name": "TaxiGuaranda",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#1a1a1a",
-  "theme_color": "#1a1a1a",
+  "background_color": "#121212",
+  "theme_color": "#00d4ff",
   "icons": [
     {
       "src": "https://cdn-icons-png.flaticon.com/512/3097/3097180.png",
