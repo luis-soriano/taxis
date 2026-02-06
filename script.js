@@ -1,91 +1,90 @@
 const canvas = document.getElementById('mapCanvas');
 const ctx = canvas.getContext('2d');
-let usuario = { rol: '', nombre: '', placa: '' };
+let appState = { role: '', user: '', status: 'idle' };
 let mapImg = new Image();
-mapImg.src = 'mapa_guaranda.jpg'; // Debes subir esta imagen a tu repo
+mapImg.src = 'mapa_guaranda.jpg'; // Recuerda subir este archivo
 
-// Redimensionar
-function resize() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-}
-window.onresize = resize;
-resize();
+function initApp(role) {
+    const name = document.getElementById('user-name').value || role;
+    appState.role = role;
+    appState.user = name;
 
-function selectRole(role) {
-    const nC = document.getElementById('nombre-cliente').value;
-    const nCon = document.getElementById('cond-nombre').value;
-    const pCon = document.getElementById('cond-placa').value;
-
-    if(role === 'cliente' && !nC) return alert("Pon tu nombre");
-    if(role === 'conductor' && !nCon) return alert("Faltan datos de conductor");
-
-    usuario = { 
-        rol: role, 
-        nombre: role === 'cliente' ? nC : nCon, 
-        placa: pCon 
-    };
-
-    document.getElementById('role-screen').className = 'screen hidden';
-    document.getElementById('app-screen').className = 'screen active';
-    document.getElementById('user-role-display').innerText = `Hola, ${usuario.nombre}`;
-
-    // Mostrar UI por rol
-    document.getElementById('cliente-ui').classList.toggle('hidden', role !== 'cliente');
-    document.getElementById('conductor-ui').classList.toggle('hidden', role !== 'conductor');
-    document.getElementById('admin-ui').classList.toggle('hidden', role !== 'admin');
-
-    if(role === 'conductor') {
-        document.getElementById('disp-cond-nombre').innerText = nCon;
-        document.getElementById('disp-cond-placa').innerText = pCon;
-    }
+    document.getElementById('role-screen').classList.add('hidden');
+    document.getElementById('app-screen').classList.remove('hidden');
     
+    // Activar UI correspondiente
+    document.getElementById(`ui-${role}`).classList.remove('hidden');
+    
+    resize();
+    startSync(); // Iniciar sincronización de "datos"
     animate();
 }
 
-// Lógica de Pedidos
-function ordenarServicio() {
-    document.getElementById('btn-ordenar').innerText = "Buscando...";
-    localStorage.setItem('pedido_activo', usuario.nombre);
-    alert("Pedido enviado a taxistas en Guaranda");
+// SIMULACIÓN DE RED (Usando LocalStorage)
+function startSync() {
+    setInterval(() => {
+        const pedido = JSON.parse(localStorage.getItem('uber_pedido'));
+        
+        if (appState.role === 'conductor' && pedido && pedido.status === 'buscando') {
+            document.getElementById('ride-request').classList.remove('hidden');
+            document.getElementById('req-name').innerText = pedido.cliente;
+            document.getElementById('req-dest').innerText = pedido.destino;
+        }
+
+        if (appState.role === 'cliente' && pedido && pedido.status === 'aceptado') {
+            showTripStatus("El conductor ha aceptado", "Llega en 2 min • Toyota Corolla");
+        }
+    }, 2000);
 }
 
-function aceptarPedido() {
-    const cliente = localStorage.getItem('pedido_activo');
-    registrarViaje(cliente, usuario.nombre, usuario.placa);
-    alert("Vas en camino por " + cliente);
-    document.getElementById('alerta-pedido').classList.add('hidden');
+function requestRide() {
+    const destino = document.getElementById('dest-input').value || "Centro de Guaranda";
+    const pedido = { cliente: appState.user, destino: destino, status: 'buscando' };
+    localStorage.setItem('uber_pedido', JSON.stringify(pedido));
+    
+    document.getElementById('btn-request').innerText = "BUSCANDO CONDUCTOR...";
+    document.getElementById('btn-request').style.background = "#555";
 }
 
-// Admin Historial
-function registrarViaje(c, con, p) {
-    const lista = document.getElementById('lista-viajes');
-    const fila = `<tr><td>${c}</td><td>${con} [${p}]</td><td>En curso</td></tr>`;
-    lista.innerHTML += fila;
+function acceptRide() {
+    const pedido = JSON.parse(localStorage.getItem('uber_pedido'));
+    pedido.status = 'aceptado';
+    pedido.conductor = appState.user;
+    localStorage.setItem('uber_pedido', JSON.stringify(pedido));
+    
+    document.getElementById('ride-request').classList.add('hidden');
+    document.getElementById('driver-info').innerText = "En viaje con " + pedido.cliente;
 }
 
-// Loop de Animación (Mapa estático con auto realista)
+function showTripStatus(msg, sub) {
+    document.getElementById('ui-cliente').classList.add('hidden');
+    document.getElementById('trip-status').classList.remove('hidden');
+    document.getElementById('trip-msg').innerText = msg;
+    document.getElementById('trip-sub').innerText = sub;
+}
+
+// RENDERIZADO DEL MAPA
 function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
-    // Dibujar Mapa
     if(mapImg.complete) {
         ctx.drawImage(mapImg, 0, 0, canvas.width, canvas.height);
     } else {
         ctx.fillStyle = "#111"; ctx.fillRect(0,0,canvas.width,canvas.height);
     }
-
-    // Dibujar Auto (Estático en centro como GPS)
-    ctx.save();
-    ctx.translate(canvas.width/2, canvas.height/2);
-    // Chasis
-    ctx.fillStyle = usuario.rol === 'conductor' ? '#ffeb3b' : '#ff4757'; // Amarillo si es taxi
-    ctx.roundRect(-10, -20, 20, 40, 5); ctx.fill();
-    // Parabrisas
-    ctx.fillStyle = "#333"; ctx.fillRect(-8, -10, 16, 8);
-    ctx.restore();
-
+    
+    // Dibujar vehículo del conductor (Si hay viaje activo)
+    drawVehicle(canvas.width/2, canvas.height/2);
     requestAnimationFrame(animate);
 }
 
-function goBack() { location.reload(); }
+function drawVehicle(x, y) {
+    ctx.fillStyle = "black";
+    ctx.beginPath();
+    ctx.roundRect(x-10, y-20, 20, 40, 4);
+    ctx.fill();
+    // Luces
+    ctx.fillStyle = "#fff"; ctx.fillRect(x-8, y-18, 5, 2); ctx.fillRect(x+3, y-18, 5, 2);
+}
+
+function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+window.onresize = resize;
