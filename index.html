@@ -2,47 +2,62 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Mapa de Taxis en Vivo</title>
+  <title>Mapa de Taxis Guaranda</title>
 
-  <!-- Hace que se vea bien en celular -->
+  <!-- Adaptación a celular -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Estilos del mapa Leaflet -->
+  <!-- Estilos de Leaflet -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
 
   <style>
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: #0f2027;
       background: linear-gradient(to right, #2c5364, #203a43, #0f2027);
       color: white;
       text-align: center;
     }
 
     h1 {
-      padding: 15px;
       margin: 0;
+      padding: 15px;
       background: #111;
     }
 
     #mapa {
-      height: 85vh; /* Altura visible SIEMPRE */
+      height: 80vh;
       width: 100%;
+    }
+
+    button {
+      padding: 10px 15px;
+      margin: 10px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      background: #00c853;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #00b248;
     }
   </style>
 </head>
 <body>
 
-  <h1>🚕 Mapa de Taxis en Vivo</h1>
+  <h1>🚕 Taxis en Guaranda</h1>
 
-  <!-- Aquí aparece el mapa -->
+  <button onclick="mostrarUbicacion()">📍 Ver mi ubicación</button>
+
   <div id="mapa"></div>
 
   <!-- Librería del mapa -->
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
-  <!-- Tu código -->
+  <!-- Tu script -->
   <script src="script.js"></script>
 
 </body>
