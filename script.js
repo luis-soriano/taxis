@@ -1,4 +1,4 @@
-console.log("Mapa de taxis (carros) en Guaranda cargando...");
+console.log("Mapa de taxis en Guaranda cargado");
 
 // =======================
 // 1️⃣ CREAR MAPA EN GUARANDA
@@ -13,47 +13,41 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(mapa);
 
 // =======================
-// 3️⃣ ICONOS DE CARRO (TAXI)
+// 3️⃣ ICONOS DE CARROS
 // =======================
 var carroLibre = L.icon({
-    iconUrl: 'https://cdn-icons-png.flaticon.com/512/744/744465.png', // carro verde
+    iconUrl: 'https://cdn-icons-png.flaticon.com/512/744/744465.png',
     iconSize: [45, 45],
     iconAnchor: [22, 40],
     popupAnchor: [0, -35]
 });
 
 var carroOcupado = L.icon({
-    iconUrl: 'https://cdn-icons-png.flaticon.com/512/744/744466.png', // carro rojo
+    iconUrl: 'https://cdn-icons-png.flaticon.com/512/744/744466.png',
     iconSize: [45, 45],
     iconAnchor: [22, 40],
     popupAnchor: [0, -35]
 });
 
 // =======================
-// 4️⃣ AGREGAR TAXIS (CARROS)
+// 4️⃣ FUNCIÓN PARA CREAR TAXIS
 // =======================
-L.marker([-1.5926, -79.0000], {icon: carroLibre})
-  .addTo(mapa)
-  .bindPopup("<b>Taxi Centro</b><br>🟢 Disponible");
+function agregarTaxi(nombre, estado, lat, lng, sector) {
+    var icono = (estado === "Disponible") ? carroLibre : carroOcupado;
 
-L.marker([-1.5965, -79.0040], {icon: carroOcupado})
-  .addTo(mapa)
-  .bindPopup("<b>Taxi Terminal</b><br>🔴 Ocupado");
-
-L.marker([-1.5885, -78.9975], {icon: carroLibre})
-  .addTo(mapa)
-  .bindPopup("<b>Taxi Norte</b><br>🟢 Disponible");
-
-L.marker([-1.5945, -79.0080], {icon: carroOcupado})
-  .addTo(mapa)
-  .bindPopup("<b>Taxi Sur</b><br>🔴 Ocupado");
+    L.marker([lat, lng], {icon: icono})
+      .addTo(mapa)
+      .bindPopup(
+        `<b>${nombre}</b><br>
+         Estado: <b>${estado}</b><br>
+         📍 Ubicación: ${sector}`
+      );
+}
 
 // =======================
-// 5️⃣ ZONA CENTRO
+// 5️⃣ AGREGAR TAXIS EN GUARANDA
 // =======================
-L.circle([-1.5926, -79.0000], {
-    color: 'yellow',
-    fillColor: '#ffff00',
-    fillOpacity: 0.15,
-    radius: 600
-}).addTo(mapa).bindPopup("Zona Centro Guaranda");
+agregarTaxi("Taxi Centro", "Disponible", -1.5926, -79.0000, "Parque Central");
+agregarTaxi("Taxi Terminal", "Ocupado", -1.5965, -79.0040, "Terminal Terrestre");
+agregarTaxi("Taxi Norte", "Disponible", -1.5885, -78.9975, "Barrio Norte");
+agregarTaxi("Taxi Sur", "Ocupado", -1.5945, -79.0080, "Avenida Sur");
