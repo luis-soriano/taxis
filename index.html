@@ -1,64 +1,63 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Mapa de Taxis Guaranda</title>
-
-  <!-- Adaptación a celular -->
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- Estilos de Leaflet -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
-
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: linear-gradient(to right, #2c5364, #203a43, #0f2027);
-      color: white;
-      text-align: center;
-    }
-
-    h1 {
-      margin: 0;
-      padding: 15px;
-      background: #111;
-    }
-
-    #mapa {
-      height: 80vh;
-      width: 100%;
-    }
-
-    button {
-      padding: 10px 15px;
-      margin: 10px;
-      font-size: 16px;
-      border: none;
-      border-radius: 8px;
-      background: #00c853;
-      color: white;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background: #00b248;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transport App Offline</title>
+    <link rel="stylesheet" href="estilos.css">
+    <meta name="theme-color" content="#1a1a1a">
+    <link rel="manifest" href="manifest.json">
 </head>
 <body>
 
-  <h1>🚕 Taxis en Guaranda</h1>
+    <div id="role-screen" class="screen active">
+        <h1>Bienvenido</h1>
+        <p>Selecciona tu perfil:</p>
+        <div class="role-cards">
+            <button onclick="selectRole('cliente')">
+                🚗 Cliente
+            </button>
+            <button onclick="selectRole('conductor')">
+                🚖 Conductor
+            </button>
+            <button onclick="selectRole('admin')">
+                🛡️ Administrador
+            </button>
+        </div>
+    </div>
 
-  <button onclick="mostrarUbicacion()">📍 Ver mi ubicación</button>
+    <div id="app-screen" class="screen hidden">
+        <header>
+            <button onclick="goBack()">⬅ Volver</button>
+            <span id="user-role-display">Rol: ...</span>
+        </header>
+        
+        <div id="map-container">
+            <canvas id="mapCanvas"></canvas>
+            
+            <div id="info-panel">
+                <h3>Estado del Viaje</h3>
+                <p>Velocidad: <span id="speed">0</span> km/h</p>
+                <p>Distancia: <span id="distance">0</span> m</p>
+                <div id="admin-controls" class="hidden">
+                    <button>🔧 Panel Admin</button>
+                    <button>📍 Ver todos</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-  <div id="mapa"></div>
-
-  <!-- Librería del mapa -->
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-
-  <!-- Tu script -->
+    <script src="script.js"></script>
+    <script>
+        // Registro del Service Worker para que funcione OFFLINE
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js');
+        }
+    </script>
+</body>
+</html>
   <script src="script.js"></script>
 
 </body>
 </html>
+
