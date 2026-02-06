@@ -2,84 +2,78 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Taxi Guaranda Offline</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Guaranda Go</title>
     <link rel="stylesheet" href="estilos.css">
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#121212">
 </head>
 <body>
 
     <div id="role-screen" class="screen active">
-        <h1>🚕 Taxi Guaranda</h1>
+        <div class="welcome-header">
+            <h1>Guaranda<span>Go</span></h1>
+            <p>Tu transporte seguro en la ciudad</p>
+        </div>
         
-        <div class="login-container">
-            <div class="login-card">
-                <input type="text" id="nombre-cliente" placeholder="Tu nombre...">
-                <button onclick="selectRole('cliente')" class="btn-cliente">🚗 Entrar como Cliente</button>
+        <div class="login-box">
+            <input type="text" id="user-name" placeholder="Tu nombre completo">
+            <div class="role-selector">
+                <button onclick="initApp('cliente')" class="btn-main">🚗 Pasajero</button>
+                <button onclick="initApp('conductor')" class="btn-outline">🚖 Conductor</button>
             </div>
-
-            <hr>
-
-            <div class="login-card">
-                <h3>Acceso Conductor</h3>
-                <input type="text" id="cond-nombre" placeholder="Nombre y Apellido">
-                <input type="text" id="cond-placa" placeholder="Matrícula (Placa)">
-                <input type="text" id="cond-compania" placeholder="Compañía">
-                <button onclick="selectRole('conductor')" class="btn-conductor">🚖 Iniciar Turno</button>
-            </div>
-
-            <button onclick="selectRole('admin')" class="btn-admin">🛡️ Administrador</button>
+            <button onclick="initApp('admin')" class="btn-admin">Acceso Administrador</button>
         </div>
     </div>
 
     <div id="app-screen" class="screen hidden">
-        <header>
-            <button onclick="goBack()" class="btn-volver">⬅ Volver</button>
-            <span id="user-role-display">Rol: ...</span>
-        </header>
-        
         <div id="map-container">
             <canvas id="mapCanvas"></canvas>
             
-            <div id="info-panel">
-                <div id="cliente-ui" class="hidden">
-                    <button id="btn-ordenar" onclick="ordenarServicio()">📍 ORDENAR TAXI AHORA</button>
-                    <p id="status-viaje">Busca tu destino en Guaranda</p>
+            <button class="floating-back" onclick="location.reload()">✕</button>
+
+            <div class="action-card">
+                <div id="ui-cliente" class="ui-section hidden">
+                    <div class="input-group">
+                        <div class="dot-start"></div>
+                        <input type="text" placeholder="Ubicación actual" value="Parque Central, Guaranda" readonly>
+                    </div>
+                    <div class="input-group">
+                        <div class="dot-end"></div>
+                        <input type="text" id="dest-input" placeholder="¿A dónde vas?">
+                    </div>
+                    <button id="btn-request" onclick="requestRide()">SOLICITAR GUARANDA GO</button>
                 </div>
 
-                <div id="conductor-ui" class="hidden">
-                    <p>👨‍✈️ <span id="disp-cond-nombre"></span> | 🆔 <span id="disp-cond-placa"></span></p>
-                    <div id="alerta-pedido" class="hidden">
-                        <p>⚠️ ¡NUEVO PEDIDO! de <span id="cliente-pedido"></span></p>
-                        <button onclick="aceptarPedido()" class="btn-aceptar">ACEPTAR</button>
+                <div id="ui-conductor" class="ui-section hidden">
+                    <div class="driver-status">
+                        <span class="status-badge">En Línea</span>
+                        <p id="driver-info">Esperando solicitudes...</p>
+                    </div>
+                    <div id="ride-request" class="ride-alert hidden">
+                        <p><strong>Nuevo Viaje:</strong> <span id="req-name"></span></p>
+                        <p>📍 Destino: <span id="req-dest"></span></p>
+                        <button class="btn-accept" onclick="acceptRide()">ACEPTAR VIAJE</button>
                     </div>
                 </div>
 
-                <div id="admin-ui" class="hidden">
-                    <h3>📊 Historial de Viajes</h3>
-                    <div class="table-wrapper">
-                        <table id="tabla-historial">
-                            <thead>
-                                <tr><th>Cliente</th><th>Taxi</th><th>Estado</th></tr>
-                            </thead>
-                            <tbody id="lista-viajes"></tbody>
-                        </table>
-                    </div>
+                <div id="ui-admin" class="ui-section hidden">
+                    <h3>Panel de Control</h3>
+                    <div id="admin-log"></div>
                 </div>
 
-                <div class="debug-stats">
-                    Vel: <span id="speed">0</span> km/h | Dist: <span id="distance">0</span> m
+                <div id="trip-status" class="hidden">
+                    <div class="trip-info">
+                        <img src="https://cdn-icons-png.flaticon.com/512/2344/2344093.png" width="40">
+                        <div>
+                            <p id="trip-msg">El conductor va en camino</p>
+                            <small id="trip-sub">Llegada en 3 min • Toyota Corolla</small>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <script src="script.js"></script>
-    <script>
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js');
-        }
-    </script>
 </body>
 </html>
