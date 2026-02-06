@@ -1,55 +1,37 @@
 document.addEventListener("DOMContentLoaded", function() {
 
-    let taxis = [
-        { id: 1, estado: "Disponible" },
-        { id: 2, estado: "Ocupado" },
-        { id: 3, estado: "Disponible" },
-        { id: 4, estado: "Ocupado" }
-    ];
+ // Crear el mapa centrado en Quito
+var mapa = L.map('mapa').setView([-0.1807, -78.4678], 13);
 
-    let contenedor = document.getElementById("contenedor-taxis");
+// Cargar el mapa visual (calles)
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap'
+}).addTo(mapa);
 
-    taxis.forEach(function(taxi) {
 
-        let tarjeta = document.createElement("div");
-        tarjeta.classList.add("taxi");
+// 🚕 Lista de taxis (ejemplo)
+var taxis = [
+    { nombre: "Taxi 1", lat: -0.1807, lng: -78.4678, estado: "disponible" },
+    { nombre: "Taxi 2", lat: -0.1900, lng: -78.4800, estado: "ocupado" },
+    { nombre: "Taxi 3", lat: -0.1750, lng: -78.4600, estado: "disponible" }
+];
 
-        let titulo = document.createElement("h2");
-        titulo.textContent = "Taxi #" + taxi.id;
 
-        let estado = document.createElement("p");
-        estado.textContent = taxi.estado;
+// Recorrer la lista de taxis y ponerlos en el mapa
+taxis.forEach(function(taxi) {
 
-        actualizarColor(estado, taxi.estado);
+    // Elegir color según estado
+    var color = taxi.estado === "disponible" ? "green" : "red";
 
-        //  NUEVO: Evento al hacer clic en la tarjeta
-        tarjeta.addEventListener("click", function() {
-
-            if (taxi.estado === "Disponible") {
-                taxi.estado = "Ocupado";
-            } else {
-                taxi.estado = "Disponible";
-            }
-
-            estado.textContent = taxi.estado;
-            actualizarColor(estado, taxi.estado);
-        });
-
-        tarjeta.appendChild(titulo);
-        tarjeta.appendChild(estado);
-        contenedor.appendChild(tarjeta);
-    });
-
+    // Crear un círculo en el mapa
+    L.circleMarker([taxi.lat, taxi.lng], {
+        radius: 8,
+        color: color,
+        fillColor: color,
+        fillOpacity: 0.8
+    })
+    .addTo(mapa)
+    .bindPopup(
+        "<b>" + taxi.nombre + "</b><br>Estado: " + taxi.estado
+    );
 });
-
-// 🔥 Función para cambiar colores según estado
-function actualizarColor(elemento, estado) {
-    elemento.classList.remove("disponible", "ocupado");
-
-    if (estado === "Disponible") {
-        elemento.classList.add("disponible");
-    } else {
-        elemento.classList.add("ocupado");
-    }
-}
-

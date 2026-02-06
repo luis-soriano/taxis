@@ -1,17 +1,47 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mapa de Taxis</title>
 
-        <title>Bienvenidos a la pagina de Guaranda</title>
-        <link rel="stylesheet" href="estilos.css"
-    </head>
-    <body>
-        <h1>Estado de taxis en la ciudad</h1>
-        <p>Consulta que taxis estan disponibles en este momento</p>
-        
-        <div id="contenedor-taxis"></div>
-    
-        <script src="script.js"></script>
-    </body>
+  <!-- Estilos de Leaflet (mapa) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+    }
+
+    h1 {
+      text-align: center;
+      background-color: #222;
+      color: white;
+      padding: 15px;
+      margin: 0;
+    }
+
+    /* Contenedor del mapa */
+    #mapa {
+      height: 500px;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>🚖 Mapa de Taxis en Vivo</h1>
+
+  <div id="mapa"></div>
+
+  <!-- Librería Leaflet -->
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+  <!-- Tu JavaScript -->
+  <script src="script.js"></script>
+
+</body>
 </html>
