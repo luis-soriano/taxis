@@ -1,24 +1,20 @@
-// --- CONFIGURACIÓN DE FIREBASE ---
-// Debes crear un proyecto en console.firebase.google.com y pegar tus datos aquí
+// CONFIGURACIÓN DE FIREBASE (Reemplaza con tus datos de Firebase Console)
 const firebaseConfig = {
-    apiKey: "TU_API_KEY",
-    authDomain: "tu-proyecto.firebaseapp.com",
-    databaseURL: "https://tu-proyecto-default-rtdb.firebaseio.com",
+    apiKey: "AIzaSyB...", 
+    databaseURL: "https://tu-proyecto.firebaseio.com", // PON TU URL DE DATABASE AQUÍ
     projectId: "tu-proyecto",
-    storageBucket: "tu-proyecto.appspot.com",
-    messagingSenderId: "123456789",
-    appId: "1:123456789:web:abcdef"
 };
 
-// Inicializar Firebase
 firebase.initializeApp(firebaseConfig);
-const database = firebase.database();
+const db = firebase.database();
 
 const canvas = document.getElementById('mapCanvas');
 const ctx = canvas.getContext('2d');
-let appState = { role: '', user: '', status: 'idle' };
+let appState = { role: '', user: '', tripId: 'viaje_unico' };
+let mapImg = new Image();
+mapImg.src = 'mapa_guaranda.jpg'; // Asegúrate de tener esta imagen en tu carpeta
 
-function initApp(role) {
+function iniciarApp(role) {
     const name = document.getElementById('user-name').value.trim() || role;
     appState.role = role;
     appState.user = name;
@@ -26,79 +22,75 @@ function initApp(role) {
     document.getElementById('role-screen').classList.add('hidden');
     document.getElementById('app-screen').classList.remove('hidden');
     document.getElementById(`ui-${role}`).classList.remove('hidden');
-    
+
     resize();
-    escucharPedidos(); // Escuchar cambios en la nube
+    escucharBaseDeDatos();
     animate();
 }
 
-// --- LÓGICA DE EMPAREJAMIENTO REAL ---
+// SINCRONIZACIÓN ENTRE DISPOSITIVOS
+function solicitarViaje() {
+    const destino = document.getElementById('input-destino').value;
+    if(!destino) return alert("Ingresa un destino");
 
-// 1. El Pasajero pide el viaje
-function requestRide() {
-    const destino = document.getElementById('dest-input').value.trim();
-    if (!destino) return alert("Pon un destino");
-
-    const nuevoPedido = {
+    // Subir el pedido a la nube
+    db.ref('pedidos/' + appState.tripId).set({
         cliente: appState.user,
         destino: destino,
-        status: 'buscando',
-        timestamp: Date.now()
-    };
+        status: 'buscando'
+    });
 
-    // Guardar en la nube (Firebase) en lugar de LocalStorage
-    database.ref('viajes/actual').set(nuevoPedido);
-    
-    document.getElementById('btn-request').innerText = "BUSCANDO CONDUCTOR...";
-    document.getElementById('btn-request').disabled = true;
+    document.getElementById('ui-cliente').classList.add('hidden');
+    document.getElementById('trip-status').classList.remove('hidden');
 }
 
-// 2. El sistema escucha cambios (Funciona en todos los dispositivos)
-function escucharPedidos() {
-    database.ref('viajes/actual').on('value', (snapshot) => {
-        const pedido = snapshot.val();
-        
-        if (!pedido) return;
+function escucharBaseDeDatos() {
+    db.ref('pedidos/' + appState.tripId).on('value', (snapshot) => {
+        const data = snapshot.val();
+        if(!data) return;
 
-        // Si soy CONDUCTOR y hay alguien buscando
-        if (appState.role === 'conductor' && pedido.status === 'buscando') {
-            document.getElementById('ride-request').classList.remove('hidden');
-            document.getElementById('req-name').innerText = pedido.cliente;
-            document.getElementById('req-dest').innerText = pedido.destino;
+        // Si soy CONDUCTOR y hay un pedido
+        if(appState.role === 'conductor' && data.status === 'buscando') {
+            document.getElementById('alerta-viaje').classList.remove('hidden');
+            document.getElementById('info-pedido').innerText = `${data.cliente} → ${data.destino}`;
         }
 
-        // Si soy CLIENTE y el conductor aceptó
-        if (appState.role === 'cliente' && pedido.status === 'aceptado' && pedido.cliente === appState.user) {
-            showTripStatus(`¡${pedido.conductor} aceptó tu viaje!`, "Llega en 3 min • Toyota Corolla");
+        // Si soy CLIENTE y aceptaron mi viaje
+        if(appState.role === 'cliente' && data.status === 'aceptado') {
+            document.getElementById('msg-status').innerText = `¡${data.conductor} va en camino!`;
         }
     });
 }
 
-// 3. El Conductor acepta el viaje
-function acceptRide() {
-    database.ref('viajes/actual').update({
+function aceptarViaje() {
+    db.ref('pedidos/' + appState.tripId).update({
         status: 'aceptado',
         conductor: appState.user
     });
-    
-    document.getElementById('ride-request').classList.add('hidden');
-    document.getElementById('driver-info').innerText = "Viaje iniciado con cliente";
+    document.getElementById('alerta-viaje').classList.add('hidden');
 }
 
-// --- DIBUJO Y OTROS (IGUAL QUE ANTES) ---
+// RENDERIZADO DEL MAPA
 function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = "#111";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    drawVehicle(canvas.width/2, canvas.height/2);
+    if(mapImg.complete) {
+        ctx.drawImage(mapImg, 0, 0, canvas.width, canvas.height);
+    } else {
+        ctx.fillStyle = "#eee"; ctx.fillRect(0,0,canvas.width, canvas.height);
+    }
+    
+    // Dibujar vehículo estilo Uber (Visto desde arriba)
+    drawCar(canvas.width/2, canvas.height/2);
     requestAnimationFrame(animate);
 }
 
-function drawVehicle(x, y) {
+function drawCar(x, y) {
     ctx.fillStyle = "black";
-    ctx.fillRect(x-10, y-20, 20, 40);
-    ctx.fillStyle = "#fff"; 
-    ctx.fillRect(x-8, y-18, 5, 2); ctx.fillRect(x+3, y-18, 5, 2);
+    ctx.beginPath();
+    ctx.roundRect ? ctx.roundRect(x-12, y-22, 24, 44, 5) : ctx.fillRect(x-12, y-22, 24, 44);
+    ctx.fill();
+    // Faros
+    ctx.fillStyle = "white"; ctx.fillRect(x-10, y-20, 6, 3); ctx.fillRect(x+4, y-20, 6, 3);
 }
 
 function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
