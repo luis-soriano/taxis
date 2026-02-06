@@ -1,32 +1,58 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Taxi Bolívar</title>
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transport App Offline</title>
+    <link rel="stylesheet" href="estilos.css">
+    <meta name="theme-color" content="#1a1a1a">
+    <link rel="manifest" href="manifest.json">
 </head>
 <body>
-  <h1>🚖 Taxi Bolívar</h1>
 
-  <!-- Cliente -->
-  <section id="cliente">
-    <h2>Cliente</h2>
-    <input type="text" id="clienteNombre" placeholder="Introduce tu nombre">
-    <button onclick="solicitarTaxi()">Solicitar Taxi</button>
-  </section>
+    <div id="role-screen" class="screen active">
+        <h1>Bienvenido</h1>
+        <p>Selecciona tu perfil:</p>
+        <div class="role-cards">
+            <button onclick="selectRole('cliente')">
+                🚗 Cliente
+            </button>
+            <button onclick="selectRole('conductor')">
+                🚖 Conductor
+            </button>
+            <button onclick="selectRole('admin')">
+                🛡️ Administrador
+            </button>
+        </div>
+    </div>
 
-  <!-- Conductor -->
-  <section id="conductor">
-    <h2>Conductor</h2>
-    <input type="text" id="conductorNombre" placeholder="Nombre">
-    <input type="text" id="conductorApellido" placeholder="Apellido">
-    <button onclick="aceptarServicio()">Aceptar Servicio</button>
-  </section>
+    <div id="app-screen" class="screen hidden">
+        <header>
+            <button onclick="goBack()">⬅ Volver</button>
+            <span id="user-role-display">Rol: ...</span>
+        </header>
+        
+        <div id="map-container">
+            <canvas id="mapCanvas"></canvas>
+            
+            <div id="info-panel">
+                <h3>Estado del Viaje</h3>
+                <p>Velocidad: <span id="speed">0</span> km/h</p>
+                <p>Distancia: <span id="distance">0</span> m</p>
+                <div id="admin-controls" class="hidden">
+                    <button>🔧 Panel Admin</button>
+                    <button>📍 Ver todos</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-  <!-- Mapa -->
-  <div id="map" style="height:500px;"></div>
-
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-  <script src="app.js"></script>
+    <script src="script.js"></script>
+    <script>
+        // Registro del Service Worker para que funcione OFFLINE
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js');
+        }
+    </script>
 </body>
 </html>
