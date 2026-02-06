@@ -1,6 +1,2 @@
-{
-  "rules": {
-    ".read": true,
-    ".write": true
-  }
-}
+"start_url": "./index.html",  <-- Fíjate en el punto
+"src": "./icono.png"          <-- Si pones un icono, usa el punto
