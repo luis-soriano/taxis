@@ -2,45 +2,47 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mapa de Taxis</title>
+  <title>Mapa de Taxis en Vivo</title>
 
-  <!-- Estilos de Leaflet (mapa) -->
+  <!-- Hace que se vea bien en celular -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Estilos del mapa Leaflet -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
 
   <style>
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background-color: #f2f2f2;
+      background: #0f2027;
+      background: linear-gradient(to right, #2c5364, #203a43, #0f2027);
+      color: white;
+      text-align: center;
     }
 
     h1 {
-      text-align: center;
-      background-color: #222;
-      color: white;
       padding: 15px;
       margin: 0;
+      background: #111;
     }
 
-    /* Contenedor del mapa */
     #mapa {
-      height: 500px;
+      height: 85vh; /* Altura visible SIEMPRE */
       width: 100%;
     }
   </style>
 </head>
-
 <body>
 
-  <h1>🚖 Mapa de Taxis en Vivo</h1>
+  <h1>🚕 Mapa de Taxis en Vivo</h1>
 
+  <!-- Aquí aparece el mapa -->
   <div id="mapa"></div>
 
-  <!-- Librería Leaflet -->
+  <!-- Librería del mapa -->
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
-  <!-- Tu JavaScript -->
+  <!-- Tu código -->
   <script src="script.js"></script>
 
 </body>
