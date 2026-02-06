@@ -1,33 +1,59 @@
-console.log("Mapa cargado correctamente");
+console.log("Mapa de Guaranda cargando...");
 
-// Coordenadas de Guaranda, Ecuador
-var mapa = L.map('mapa').setView([-1.5926, -79.0000], 14);
+// =======================
+// 1️⃣ CREAR MAPA EN GUARANDA
+// =======================
+var mapa = L.map('mapa').setView([-1.5926, -79.0000], 15);
 
-// Mapa base
+// =======================
+// 2️⃣ MAPA BASE (CALLES)
+// =======================
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© OpenStreetMap contributors'
 }).addTo(mapa);
 
-// Iconos
+// =======================
+// 3️⃣ ICONOS GRANDES Y LLAMATIVOS
+// =======================
 var taxiLibre = L.icon({
-    iconUrl: 'https://cdn-icons-png.flaticon.com/512/743/743922.png',
-    iconSize: [40, 40]
+    iconUrl: 'https://cdn-icons-png.flaticon.com/512/854/854878.png', // verde brillante
+    iconSize: [50, 50],
+    iconAnchor: [25, 50],
+    popupAnchor: [0, -45]
 });
 
 var taxiOcupado = L.icon({
-    iconUrl: 'https://cdn-icons-png.flaticon.com/512/743/743131.png',
-    iconSize: [40, 40]
+    iconUrl: 'https://cdn-icons-png.flaticon.com/512/2972/2972185.png', // rojo fuerte
+    iconSize: [50, 50],
+    iconAnchor: [25, 50],
+    popupAnchor: [0, -45]
 });
 
-// Taxis de ejemplo en Guaranda
+// =======================
+// 4️⃣ MARCADORES DE TAXIS
+// =======================
 L.marker([-1.5926, -79.0000], {icon: taxiLibre})
   .addTo(mapa)
-  .bindPopup("Taxi Centro - Disponible");
+  .bindPopup("<b>Taxi Centro</b><br>🟢 Disponible");
 
-L.marker([-1.5960, -79.0050], {icon: taxiOcupado})
+L.marker([-1.5965, -79.0040], {icon: taxiOcupado})
   .addTo(mapa)
-  .bindPopup("Taxi Terminal - Ocupado");
+  .bindPopup("<b>Taxi Terminal</b><br>🔴 Ocupado");
 
-L.marker([-1.5880, -78.9970], {icon: taxiLibre})
+L.marker([-1.5885, -78.9975], {icon: taxiLibre})
   .addTo(mapa)
-  .bindPopup("Taxi Norte - Disponible");
+  .bindPopup("<b>Taxi Norte</b><br>🟢 Disponible");
+
+L.marker([-1.5945, -79.0080], {icon: taxiOcupado})
+  .addTo(mapa)
+  .bindPopup("<b>Taxi Sur</b><br>🔴 Ocupado");
+
+// =======================
+// 5️⃣ CÍRCULO DEL CENTRO (DECORACIÓN)
+// =======================
+L.circle([-1.5926, -79.0000], {
+    color: 'yellow',
+    fillColor: '#ffff00',
+    fillOpacity: 0.2,
+    radius: 500
+}).addTo(mapa).bindPopup("Zona Centro Guaranda");
