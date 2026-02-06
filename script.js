@@ -1,15 +1,14 @@
-// Mensaje para comprobar que el JS carga
-console.log("Script cargado correctamente");
+console.log("Mapa cargado correctamente");
 
-// Crear el mapa centrado en una ciudad (puedes cambiar coordenadas)
-var mapa = L.map('mapa').setView([-0.1807, -78.4678], 13); // Quito ejemplo
+// Coordenadas de Guaranda, Ecuador
+var mapa = L.map('mapa').setView([-1.5926, -79.0000], 14);
 
-// Cargar los mapas base (calles)
+// Mapa base
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© OpenStreetMap contributors'
 }).addTo(mapa);
 
-// Iconos personalizados
+// Iconos
 var taxiLibre = L.icon({
     iconUrl: 'https://cdn-icons-png.flaticon.com/512/743/743922.png',
     iconSize: [40, 40]
@@ -20,11 +19,15 @@ var taxiOcupado = L.icon({
     iconSize: [40, 40]
 });
 
-// Agregar taxis de ejemplo
-L.marker([-0.1807, -78.4678], {icon: taxiLibre})
+// Taxis de ejemplo en Guaranda
+L.marker([-1.5926, -79.0000], {icon: taxiLibre})
   .addTo(mapa)
-  .bindPopup("Taxi 1 - Disponible");
+  .bindPopup("Taxi Centro - Disponible");
 
-L.marker([-0.1907, -78.4578], {icon: taxiOcupado})
+L.marker([-1.5960, -79.0050], {icon: taxiOcupado})
   .addTo(mapa)
-  .bindPopup("Taxi 2 - Ocupado");
+  .bindPopup("Taxi Terminal - Ocupado");
+
+L.marker([-1.5880, -78.9970], {icon: taxiLibre})
+  .addTo(mapa)
+  .bindPopup("Taxi Norte - Disponible");
