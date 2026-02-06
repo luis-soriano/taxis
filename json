@@ -1,14 +1,14 @@
 {
-  "name": "Taxi Guaranda App",
-  "short_name": "TaxiGuaranda",
+  "name": "Guaranda Go",
+  "short_name": "G-Go",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#121212",
-  "theme_color": "#00d4ff",
+  "background_color": "#000000",
+  "theme_color": "#000000",
   "icons": [
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/3097/3097180.png",
-      "sizes": "192x192",
+      "src": "https://cdn-icons-png.flaticon.com/512/2344/2344093.png",
+      "sizes": "512x512",
       "type": "image/png"
     }
   ]
