@@ -1,20 +1,14 @@
-console.log("Mapa de taxis en Guaranda cargado");
+console.log("Mapa de taxis en Guaranda cargando...");
 
-// =======================
-// 1️⃣ CREAR MAPA EN GUARANDA
-// =======================
-var mapa = L.map('mapa').setView([-1.5926, -79.0000], 15);
+// 1️⃣ Crear el mapa centrado en Guaranda
+var mapa = L.map('mapa').setView([-1.5923, -79.0016], 15);
 
-// =======================
-// 2️⃣ MAPA BASE
-// =======================
+// 2️⃣ Mapa base OpenStreetMap
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© OpenStreetMap contributors'
 }).addTo(mapa);
 
-// =======================
-// 3️⃣ ICONOS DE CARROS
-// =======================
+// 3️⃣ Iconos de carro
 var carroLibre = L.icon({
     iconUrl: 'https://cdn-icons-png.flaticon.com/512/744/744465.png',
     iconSize: [45, 45],
@@ -29,25 +23,20 @@ var carroOcupado = L.icon({
     popupAnchor: [0, -35]
 });
 
-// =======================
-// 4️⃣ FUNCIÓN PARA CREAR TAXIS
-// =======================
-function agregarTaxi(nombre, estado, lat, lng, sector) {
-    var icono = (estado === "Disponible") ? carroLibre : carroOcupado;
+// 4️⃣ Agregar taxis con ubicaciones reales
 
-    L.marker([lat, lng], {icon: icono})
-      .addTo(mapa)
-      .bindPopup(
-        `<b>${nombre}</b><br>
-         Estado: <b>${estado}</b><br>
-         📍 Ubicación: ${sector}`
-      );
-}
+L.marker([-1.5923, -79.0016], {icon: carroLibre})
+  .addTo(mapa)
+  .bindPopup("<b>Taxi Centro</b><br>🟢 Disponible<br>Ubicación: Centro de Guaranda");
 
-// =======================
-// 5️⃣ AGREGAR TAXIS EN GUARANDA
-// =======================
-agregarTaxi("Taxi Centro", "Disponible", -1.5926, -79.0000, "Parque Central");
-agregarTaxi("Taxi Terminal", "Ocupado", -1.5965, -79.0040, "Terminal Terrestre");
-agregarTaxi("Taxi Norte", "Disponible", -1.5885, -78.9975, "Barrio Norte");
-agregarTaxi("Taxi Sur", "Ocupado", -1.5945, -79.0080, "Avenida Sur");
+L.marker([-1.59157, -78.99421], {icon: carroOcupado})
+  .addTo(mapa)
+  .bindPopup("<b>Taxi Terminal</b><br>🔴 Ocupado<br>Ubicación: Terminal Terrestre");
+
+L.marker([-1.59193, -79.00120], {icon: carroLibre})
+  .addTo(mapa)
+  .bindPopup("<b>Taxi Ayuntamiento</b><br>🟢 Disponible<br>Ubicación: Municipio / Catedral");
+
+L.marker([-1.57182, -79.00644], {icon: carroOcupado})
+  .addTo(mapa)
+  .bindPopup("<b>Taxi Parque</b><br>🔴 Ocupado<br>Ubicación: Parque Ecológico");
