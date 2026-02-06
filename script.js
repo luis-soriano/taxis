@@ -1,4 +1,4 @@
-console.log("Mapa de Guaranda cargando...");
+console.log("Mapa de taxis en Guaranda cargando...");
 
 // =======================
 // 1️⃣ CREAR MAPA EN GUARANDA
@@ -6,31 +6,38 @@ console.log("Mapa de Guaranda cargando...");
 var mapa = L.map('mapa').setView([-1.5926, -79.0000], 15);
 
 // =======================
-// 2️⃣ MAPA BASE (CALLES)
+// 2️⃣ MAPA BASE
 // =======================
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© OpenStreetMap contributors'
 }).addTo(mapa);
 
 // =======================
-// 3️⃣ ICONOS GRANDES Y LLAMATIVOS
+// 3️⃣ ICONOS TIPO TAXI GRANDES
 // =======================
-var taxiLibre = L.icon({
-    iconUrl: 'https://cdn-icons-png.flaticon.com/512/854/854878.png', // verde brillante
-    iconSize: [50, 50],
-    iconAnchor: [25, 50],
-    popupAnchor: [0, -45]
-});
+function crearIconoTaxi(color) {
+    return L.divIcon({
+        html: `<div style="
+            background:${color};
+            width:50px;
+            height:50px;
+            border-radius:50%;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:26px;
+            box-shadow:0 0 10px black;
+            border:2px solid white;
+        ">🚕</div>`,
+        className: ''
+    });
+}
 
-var taxiOcupado = L.icon({
-    iconUrl: 'https://cdn-icons-png.flaticon.com/512/2972/2972185.png', // rojo fuerte
-    iconSize: [50, 50],
-    iconAnchor: [25, 50],
-    popupAnchor: [0, -45]
-});
+var taxiLibre = crearIconoTaxi("#00c853");   // verde brillante
+var taxiOcupado = crearIconoTaxi("#d50000"); // rojo fuerte
 
 // =======================
-// 4️⃣ MARCADORES DE TAXIS
+// 4️⃣ AGREGAR TAXIS
 // =======================
 L.marker([-1.5926, -79.0000], {icon: taxiLibre})
   .addTo(mapa)
@@ -49,11 +56,11 @@ L.marker([-1.5945, -79.0080], {icon: taxiOcupado})
   .bindPopup("<b>Taxi Sur</b><br>🔴 Ocupado");
 
 // =======================
-// 5️⃣ CÍRCULO DEL CENTRO (DECORACIÓN)
+// 5️⃣ ZONA CENTRO
 // =======================
 L.circle([-1.5926, -79.0000], {
     color: 'yellow',
     fillColor: '#ffff00',
-    fillOpacity: 0.2,
-    radius: 500
+    fillOpacity: 0.15,
+    radius: 600
 }).addTo(mapa).bindPopup("Zona Centro Guaranda");
