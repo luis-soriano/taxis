@@ -3,32 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Transport App Offline</title>
+    <title>Taxi Guaranda Offline</title>
     <link rel="stylesheet" href="estilos.css">
-    <meta name="theme-color" content="#1a1a1a">
     <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#121212">
 </head>
 <body>
 
     <div id="role-screen" class="screen active">
-        <h1>Bienvenido</h1>
-        <p>Selecciona tu perfil:</p>
-        <div class="role-cards">
-            <button onclick="selectRole('cliente')">
-                🚗 Cliente
-            </button>
-            <button onclick="selectRole('conductor')">
-                🚖 Conductor
-            </button>
-            <button onclick="selectRole('admin')">
-                🛡️ Administrador
-            </button>
+        <h1>🚕 Taxi Guaranda</h1>
+        
+        <div class="login-container">
+            <div class="login-card">
+                <input type="text" id="nombre-cliente" placeholder="Tu nombre...">
+                <button onclick="selectRole('cliente')" class="btn-cliente">🚗 Entrar como Cliente</button>
+            </div>
+
+            <hr>
+
+            <div class="login-card">
+                <h3>Acceso Conductor</h3>
+                <input type="text" id="cond-nombre" placeholder="Nombre y Apellido">
+                <input type="text" id="cond-placa" placeholder="Matrícula (Placa)">
+                <input type="text" id="cond-compania" placeholder="Compañía">
+                <button onclick="selectRole('conductor')" class="btn-conductor">🚖 Iniciar Turno</button>
+            </div>
+
+            <button onclick="selectRole('admin')" class="btn-admin">🛡️ Administrador</button>
         </div>
     </div>
 
     <div id="app-screen" class="screen hidden">
         <header>
-            <button onclick="goBack()">⬅ Volver</button>
+            <button onclick="goBack()" class="btn-volver">⬅ Volver</button>
             <span id="user-role-display">Rol: ...</span>
         </header>
         
@@ -36,12 +43,33 @@
             <canvas id="mapCanvas"></canvas>
             
             <div id="info-panel">
-                <h3>Estado del Viaje</h3>
-                <p>Velocidad: <span id="speed">0</span> km/h</p>
-                <p>Distancia: <span id="distance">0</span> m</p>
-                <div id="admin-controls" class="hidden">
-                    <button>🔧 Panel Admin</button>
-                    <button>📍 Ver todos</button>
+                <div id="cliente-ui" class="hidden">
+                    <button id="btn-ordenar" onclick="ordenarServicio()">📍 ORDENAR TAXI AHORA</button>
+                    <p id="status-viaje">Busca tu destino en Guaranda</p>
+                </div>
+
+                <div id="conductor-ui" class="hidden">
+                    <p>👨‍✈️ <span id="disp-cond-nombre"></span> | 🆔 <span id="disp-cond-placa"></span></p>
+                    <div id="alerta-pedido" class="hidden">
+                        <p>⚠️ ¡NUEVO PEDIDO! de <span id="cliente-pedido"></span></p>
+                        <button onclick="aceptarPedido()" class="btn-aceptar">ACEPTAR</button>
+                    </div>
+                </div>
+
+                <div id="admin-ui" class="hidden">
+                    <h3>📊 Historial de Viajes</h3>
+                    <div class="table-wrapper">
+                        <table id="tabla-historial">
+                            <thead>
+                                <tr><th>Cliente</th><th>Taxi</th><th>Estado</th></tr>
+                            </thead>
+                            <tbody id="lista-viajes"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="debug-stats">
+                    Vel: <span id="speed">0</span> km/h | Dist: <span id="distance">0</span> m
                 </div>
             </div>
         </div>
@@ -49,7 +77,6 @@
 
     <script src="script.js"></script>
     <script>
-        // Registro del Service Worker para que funcione OFFLINE
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js');
         }
